@@ -19,6 +19,9 @@
   [disabled]="!allowNewServer"
   (click)="onCreateServer()">Add Server</button>
 <p [innerText]="allowNewServer"></p>
-<p [ngStyle]="{backgroundColor: getColor()}">{{ serverStatus }}</p>
+<p
+  [ngStyle]="{backgroundColor: getColor()}"
+  [ngClass]="{online: serverStatus === 'online'}"
+  >{{ serverStatus }}</p>
 
 
