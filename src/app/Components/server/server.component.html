@@ -8,7 +8,11 @@
   type="text"
   class="form-control"
   [(ngModel)]="serverName" />
-<p *ngIf="serverName">{{ serverCreationStatus }}</p>
+<p *ngIf="serverName; else serverNull">{{ serverCreationStatus }}</p>
+<ng-template #serverNull>
+  <p>server name null</p>
+</ng-template>
+
 
 <button
   class="btn btn-primary"
