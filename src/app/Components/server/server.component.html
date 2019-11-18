@@ -22,6 +22,10 @@
 <p
   [ngStyle]="{backgroundColor: getColor()}"
   [ngClass]="{online: serverStatus === 'online'}"
-  >{{ serverStatus }}</p>
+  >{{ serverStatus }}
+</p>
 
+<ul *ngFor="let item of servers">
+  <li>{{ item }}</li>
+</ul>
 
