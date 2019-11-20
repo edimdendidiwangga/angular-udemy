@@ -12,7 +12,8 @@ import {
   AfterViewChecked,
   OnDestroy,
   ViewChild,
-  ElementRef
+  ElementRef,
+  ContentChild
 } from '@angular/core';
 
 @Component({
@@ -31,7 +32,9 @@ export class ServerElementComponent implements OnInit,
   OnDestroy {
   @Input('srvElement') element: { type: string, name: string, content: string };
   @Input() name: string;
-  @ViewChild('heading', { static: true }) header: ElementRef // If you DON'T use the selected element in ngOnInit, set static: false instead.
+  @ViewChild('heading', { static: true }) header: ElementRef
+  // If you DON'T use the selected element in ngOnInit, set static: false instead.
+  @ContentChild('contentParagraph', { static: true }) paragraph: ElementRef
 
   constructor() {
     console.log('constructor called!')
@@ -44,6 +47,7 @@ export class ServerElementComponent implements OnInit,
   ngOnInit() { // componentDidMount
     console.log('ngOnInit called!')
     console.log('header', this.header.nativeElement.textContent)
+    console.log('content', this.paragraph.nativeElement.textContent)
   }
 
   ngDoCheck() {
@@ -52,6 +56,7 @@ export class ServerElementComponent implements OnInit,
 
   ngAfterContentInit() {
     console.log("ngAfterContentInit called")
+    console.log('content AfterContentInit', this.paragraph.nativeElement.textContent)
   }
 
   ngAfterContentChecked() {
