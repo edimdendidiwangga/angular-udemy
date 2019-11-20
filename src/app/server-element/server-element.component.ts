@@ -31,7 +31,7 @@ export class ServerElementComponent implements OnInit,
   OnDestroy {
   @Input('srvElement') element: { type: string, name: string, content: string };
   @Input() name: string;
-  @ViewChild('heading', { static: true }) header: ElementRef
+  @ViewChild('heading', { static: true }) header: ElementRef // If you DON'T use the selected element in ngOnInit, set static: false instead.
 
   constructor() {
     console.log('constructor called!')
