@@ -50,7 +50,10 @@
         defaultColor="yellow"
         > Style me with better directive!
       </p>
-
+      <div [ngSwitch]="value">
+        <div *ngSwitchCase="10">10</div>
+        <div *ngSwitchDefault>5</div>
+      </div>
     </div>
   </div>
 </div>
