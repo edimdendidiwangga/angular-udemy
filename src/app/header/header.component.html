@@ -9,14 +9,15 @@
         <li><a href="#" (click)="onSelect('shopping-list')">Shopping List</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
+        <li class="dropdown" appDropdown>
           <a
             href="#"
             class="dropdown-toogle"
             role="button"
-            (click)="isCollapse = !isCollapse">Manage <span class="caret"></span>
+            >Manage <span class="caret"></span> <!-- (click)="isCollapse = !isCollapse" -->
+           
           </a>
-          <ul class="dropdown-menu" [ngStyle]="{display: isCollapse ? 'block' : 'none'}">
+          <ul class="dropdown-menu" >  <!-- [ngStyle]="{display: isCollapse ? 'block' : 'none'}" -->
             <li><a href="#">Save Data</a></li>
             <li><a href="#">Fetch Data</a></li>
           </ul>
