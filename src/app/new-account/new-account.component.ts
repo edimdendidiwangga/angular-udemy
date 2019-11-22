@@ -4,12 +4,13 @@ import { LoggingSerice } from '../logging.service';
 @Component({
   selector: 'app-new-account',
   templateUrl: './new-account.component.html',
-  styleUrls: ['./new-account.component.css']
+  styleUrls: ['./new-account.component.css'],
+  providers: [LoggingSerice]
 })
 export class NewAccountComponent implements OnInit {
   @Output() accountAdded = new EventEmitter<{name: string, status:string}>();
 
-  constructor() { }
+  constructor(private loggingService: LoggingSerice) { }
 
   ngOnInit() {
   }
@@ -19,7 +20,6 @@ export class NewAccountComponent implements OnInit {
       name: accountName,
       status: accountStatus
     })
-    const service = new LoggingSerice();
-    service.logStatusChange(accountStatus);
+    this.loggingService.logStatusChange(accountStatus)
   }
 }
