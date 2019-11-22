@@ -2,16 +2,17 @@
   <div class="col-xs-12 col-md-8 col-md-offset-2">
     <label>Account Name</label>
     <input type="text" class="form-control" #accountName>
+    <br>
+    <div class="form-group">
+      <select name="" id="" class="form-control" #status>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+        <option value="hidden">Hidden</option>
+      </select>
+    </div>
+    <button class="btn btn-primary"
+      (click)="onCreateAccount(accountName.value, status.value)">
+      Add Account
+    </button>
   </div>
-  <div class="form-group">
-    <select name="" id="" class="form-control" #status>
-      <option value="active">Active</option>
-      <option value="inactive">Inactive</option>
-      <option value="hidden">Hidden</option>
-    </select>
-  </div>
-  <button class="btn btn-primary"
-    (click)="onCreateAccount(accountName.value, status.value)">
-    Add Account
-  </button>
 </div>
