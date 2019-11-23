@@ -6,10 +6,12 @@ import { AccountService } from '../accounts.service';
   selector: 'app-new-account',
   templateUrl: './new-account.component.html',
   styleUrls: ['./new-account.component.css'],
-  providers: [LoggingSerice]
+  // providers: [LoggingSerice]
 })
 export class NewAccountComponent implements OnInit {
-  constructor(private loggingService: LoggingSerice, private accountsService: AccountService) { }
+  constructor(private loggingService: LoggingSerice, private accountsService: AccountService) {
+    this.accountsService.statusUpdated.subscribe((status: string) => alert('new status ' + status))
+  }
 
   ngOnInit() {
   }

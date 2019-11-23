@@ -18,6 +18,7 @@ export class AccountComponent implements OnInit {
 
   onSetTo(status) {
     this.accountsService.updateStatus(this.id, status);
+    this.accountsService.statusUpdated.emit(status);
   }
 
 }
