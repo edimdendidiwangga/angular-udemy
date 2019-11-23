@@ -5,7 +5,7 @@ import { AccountService } from '../accounts.service';
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.css'],
-  providers: [AccountService]
+  providers: []
 })
 export class AccountComponent implements OnInit {
   @Input() account: { name: string, status: string };

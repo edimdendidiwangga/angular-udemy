@@ -6,7 +6,7 @@ import { AccountService } from '../accounts.service';
   selector: 'app-new-account',
   templateUrl: './new-account.component.html',
   styleUrls: ['./new-account.component.css'],
-  providers: [LoggingSerice, AccountService]
+  providers: [LoggingSerice]
 })
 export class NewAccountComponent implements OnInit {
   constructor(private loggingService: LoggingSerice, private accountsService: AccountService) { }
