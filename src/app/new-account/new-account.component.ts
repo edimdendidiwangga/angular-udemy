@@ -1,25 +1,21 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoggingSerice } from '../logging.service';
+import { AccountService } from '../accounts.service';
 
 @Component({
   selector: 'app-new-account',
   templateUrl: './new-account.component.html',
   styleUrls: ['./new-account.component.css'],
-  providers: [LoggingSerice]
+  providers: [LoggingSerice, AccountService]
 })
 export class NewAccountComponent implements OnInit {
-  @Output() accountAdded = new EventEmitter<{name: string, status:string}>();
-
-  constructor(private loggingService: LoggingSerice) { }
+  constructor(private loggingService: LoggingSerice, private accountsService: AccountService) { }
 
   ngOnInit() {
   }
 
   onCreateAccount(accountName: string, accountStatus: string) {
-    this.accountAdded.emit({
-      name: accountName,
-      status: accountStatus
-    })
+    this.accountsService.addAccount(accountName, accountStatus);
     this.loggingService.logStatusChange(accountStatus)
   }
 }
