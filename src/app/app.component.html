@@ -1,19 +1,16 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+      <form [formGroup]="signupForm">
         <div
-          id="user-data"
-          ngModelGroup="userData"
-          #userData="ngModelGroup">
+          id="user-data">
           <div class="form-group">
             <label for="username">Username</label>
             <input
               type="text"
               id="username"
-              name="username"
               class="form-control"
-              ngModel
+              formControlName="username"
               required>
           </div>
           <button
@@ -27,32 +24,28 @@
             <input
               type="email"
               id="email"
-              name="email"
-              ngModel
+              formControlName="email"
               required
-              class="form-control"
-              #email="ngModel">
+              class="form-control">
           </div>
-          <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email</span>
+          <!-- <span class="help-block" *ngIf="!email.valid && email.touched">Please enter a valid email</span> -->
         </div>
-        <p *ngIf="!userData.valid && userData.touched">User Data is invalid!</p>
+        <!-- <p *ngIf="!userData.valid && userData.touched">User Data is invalid!</p> -->
         <div class="form-group">
           <label for="secret">Secret Questions</label>
           <select
             id="secret"
-            name="secret"
-            class="form-control"
-            [ngModel]="defaultQuestion">
+            formControlName="secret"
+            class="form-control">
             <option value="pet">Your first Pet?</option>
             <option value="teacher">Your first teacher?</option>
           </select>
         </div>
         <div class="form-group">
           <textarea
-            name="questionAnswer"
+            formControlName="questionAnswer"
             class="form-control"
-            cols="30" rows="10"
-            [(ngModel)]="answer">
+            cols="30" rows="10">
           </textarea>
         </div>
         <p>Your reply: {{ answer }}</p>
@@ -60,8 +53,7 @@
           <label>
             <input
               type="radio"
-              name="gender"
-              ngModel
+              formControlName="gender"
               [value]="gender"
               required>
               {{ gender }}
@@ -76,7 +68,7 @@
     </div>
   </div>
   <hr>
-  <div class="row" *ngIf="submitted">
+  <!-- <div class="row" *ngIf="submitted">
     <div class="col-xs-12">
       <h3>Your Data</h3>
       <p>Username: {{ user.username }}</p>
@@ -85,5 +77,5 @@
       <p>Answer: {{ user.answer }}</p>
       <p>Gender: {{ user.gender }}</p>
     </div>
-  </div>
+  </div> -->
 </div>
