@@ -10,6 +10,7 @@ export class AppComponent {
   @ViewChild('f', {static: false}) signupForm: NgForm;
   title = 'recipe-book-udemy';
   defaultQuestion = "pet";
+  answer = ''
   
   suggestUserName() {
     const suggestedName = 'Superuser';
