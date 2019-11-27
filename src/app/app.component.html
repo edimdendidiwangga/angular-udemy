@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <form [formGroup]="signupForm">
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
         <div
           id="user-data">
           <div class="form-group">
@@ -22,6 +22,16 @@
               required
               class="form-control">
           </div>
+        </div>
+        <div class="radio" *ngFor="let gender of genders">
+          <label>
+            <input
+              type="radio"
+              formControlName="gender"
+              [value]="gender"
+              required>
+              {{ gender }}
+          </label>
         </div>
         <button
           class="btn btn-primary"
