@@ -3,7 +3,7 @@
     <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
       <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
         <div
-          id="user-data">
+          id="user-data" [formGroupName]="userData">
           <div class="form-group">
             <label for="username">Username</label>
             <input
@@ -13,7 +13,7 @@
               formControlName="username">
           </div>
           <span
-            *ngIf="!signupForm.get('username').valid && signupForm.get('username').touched"
+            *ngIf="!signupForm.get('userData.username').valid && signupForm.get('userData.username').touched"
             class="help-block">Please enter valid username!</span>
           <div class="form-group">
             <label for="email">Mail</label>
@@ -24,7 +24,7 @@
               class="form-control">
           </div>
           <span
-            *ngIf="!signupForm.get('email').valid && signupForm.get('email').touched"
+            *ngIf="!signupForm.get('userData.email').valid && signupForm.get('userData.email').touched"
             class="help-block">Please enter valid email!</span>
         </div>
         <div class="radio" *ngFor="let gender of genders">
@@ -32,8 +32,7 @@
             <input
               type="radio"
               formControlName="gender"
-              [value]="gender"
-              >
+              [value]="gender">
               {{ gender }}
           </label>
         </div>
