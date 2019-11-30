@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { Post } from './post.model';
 import { PostService } from './post.service';
-import { post } from 'selenium-webdriver/http';
 import { Subscription } from 'rxjs';
 
 @Component({
