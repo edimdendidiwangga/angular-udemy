@@ -1,5 +1,5 @@
 import { Inject } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Post } from './post.model';
 import { Subject, throwError } from 'rxjs';
@@ -8,11 +8,10 @@ import { Subject, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class PostService {
-  baseUrl = 'https://myapps-2c658.firebaseio.com/posts.json';
+  baseUrl = 'https://myapps-2c658.firebaseio.com/posts.json?print=pretty&custom=key';
   headers = {
-    headers: new HttpHeaders({
-      'Custom-Header': 'Hello'
-    })
+    headers: new HttpHeaders({'Custom-Header': 'Hello'}),
+    params: new HttpParams().set('print', 'pretty')
   }
   error = new Subject<string>();
 
@@ -30,8 +29,11 @@ export class PostService {
   }
 
   fetchPosts() {
+    let searchParams = new HttpParams();
+    searchParams.append('custom', 'key');
+
     return this.http
-      .get<{[key: string]: Post}>(this.baseUrl, this.headers)
+      .get<{[key: string]: Post}>(this.baseUrl, { ...this.headers, params: { ...this.headers.params, ...searchParams } })
       .pipe(
         map((responseData) => {
           const postsArray: Post[] = [];
