@@ -7,15 +7,13 @@ import { Post } from './post.model';
   providedIn: 'root'
 })
 export class PostService {
+  baseUrl = 'https://myapps-2c658.firebaseio.com/posts.json';
   constructor(private http: HttpClient) {}
 
   createAndStorePost(title: string, content: string) {
     const postData: Post = { title, content };
     return this.http
-    .post<{ name: string }>(
-      'https://myapps-2c658.firebaseio.com/posts.json',
-      postData
-    )
+    .post<{ name: string }>(this.baseUrl, postData)
     // .subscribe(responseData => {
     //   console.log(responseData);
     // });
@@ -23,7 +21,7 @@ export class PostService {
 
   fetchPosts() {
     return this.http
-      .get<{[key: string]: Post}>('https://myapps-2c658.firebaseio.com/posts.json')
+      .get<{[key: string]: Post}>(this.baseUrl)
       .pipe(
         map((responseData) => {
           const postsArray: Post[] = [];
@@ -38,5 +36,9 @@ export class PostService {
       // .subscribe(responseData => {
       //   return responseData;
       // });
+  }
+
+  deletePosts() {
+    return this.http.delete(this.baseUrl);
   }
 }
