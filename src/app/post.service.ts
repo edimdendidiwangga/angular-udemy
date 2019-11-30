@@ -11,18 +11,18 @@ export class PostService {
 
   createAndStorePost(title: string, content: string) {
     const postData: Post = { title, content };
-    this.http
+    return this.http
     .post<{ name: string }>(
       'https://myapps-2c658.firebaseio.com/posts.json',
       postData
     )
-    .subscribe(responseData => {
-      console.log(responseData);
-    });
+    // .subscribe(responseData => {
+    //   console.log(responseData);
+    // });
   }
 
   fetchPosts() {
-    this.http
+    return this.http
       .get<{[key: string]: Post}>('https://myapps-2c658.firebaseio.com/posts.json')
       .pipe(
         map((responseData) => {
@@ -35,8 +35,8 @@ export class PostService {
           return postsArray
         })
       )
-      .subscribe(responseData => {
-        return responseData;
-      });
+      // .subscribe(responseData => {
+      //   return responseData;
+      // });
   }
 }
