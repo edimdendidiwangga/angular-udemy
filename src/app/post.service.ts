@@ -11,7 +11,7 @@ export class PostService {
   baseUrl = 'https://myapps-2c658.firebaseio.com/posts.json?print=pretty&custom=key';
   headers = {
     headers: new HttpHeaders({'Custom-Header': 'Hello'}),
-    params: new HttpParams().set('print', 'pretty')
+    params: new HttpParams().set('print', 'pretty'),
   }
   error = new Subject<string>();
 
@@ -33,7 +33,8 @@ export class PostService {
     searchParams.append('custom', 'key');
 
     return this.http
-      .get<{[key: string]: Post}>(this.baseUrl, { ...this.headers, params: { ...this.headers.params, ...searchParams } })
+      // <{[key: string]: Post}>
+      .get(this.baseUrl, { ...this.headers, params: { ...this.headers.params, ...searchParams }, responseType: 'json' })
       .pipe(
         map((responseData) => {
           const postsArray: Post[] = [];
@@ -56,7 +57,10 @@ export class PostService {
 
   deletePosts() {
     return this.http
-      .delete(this.baseUrl, { observe: 'events' })
+      .delete(this.baseUrl, {
+        observe: 'events',
+        responseType: 'json'
+      })
       .pipe(
         tap(event => {
           console.log(event)
