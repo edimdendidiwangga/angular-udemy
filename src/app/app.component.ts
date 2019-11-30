@@ -18,7 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private postService: PostService) {}
 
   ngOnInit() {
-    this.errorSub = this.error.subscribe(errorMessage => {
+    this.errorSub = this.postService.error.subscribe(errorMessage => {
       this.error = errorMessage;
     })
     this.onFetchPosts();
