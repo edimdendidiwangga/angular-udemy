@@ -45,5 +45,20 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.http.post<AuthResponseSata>(this.baseUrl('signInWithPassword'), { email, password, returnSecureToken: true })
+      .pipe(
+        catchError((errorRes) => {
+          let errorMsg = errorRes.error.error.message || 'An unknown error occured!';
+          if (!errorRes.error || !errorRes.error.error) {
+            return throwError(errorMsg);
+          }
+          if (/EMAIL_NOT_FOUND/g.test(errorMsg)) {
+            errorMsg = 'This email not found';
+          }
+          if (/INVALID_PASSWORD/g.test(errorMsg)) {
+            errorMsg = 'Password is Wrong';
+          }
+          return throwError(errorMsg)
+        })
+      );
   }
 }
