@@ -44,10 +44,10 @@ export class AuthService {
       return throwError(errorMsg);
     }
     if (/EMAIL_NOT_FOUND/g.test(errorMsg)) {
-      errorMsg = 'This email not found';
+      errorMsg = 'This email does not exist.';
     }
     if (/INVALID_PASSWORD/g.test(errorMsg)) {
-      errorMsg = 'Password is Wrong';
+      errorMsg = 'This Password is not correct.';
     }
     if (/EMAIL_EXISTS/g.test(errorMsg)) {
       errorMsg = 'This email exists already';
