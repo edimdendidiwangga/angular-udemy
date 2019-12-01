@@ -33,10 +33,10 @@ export class AuthComponent implements OnInit {
       this.authService.signup(email, password).subscribe((resData) => {
         this.isLoading = false;
         console.log(resData)
-      }, error => {
+      }, errorRes => {
         this.isLoading = false;
-        this.error = error.message;
-        console.log('error', error)
+        console.log('error', errorRes)
+        this.error = errorRes
       });
     }
   
