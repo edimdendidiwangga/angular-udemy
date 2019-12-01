@@ -3,25 +3,29 @@ import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
-interface AuthResponseSata {
+export interface AuthResponseSata {
   kind: string;
   idToken: string;
   email: string;
   refreshToken: string;
   expiresIn: string;
   localId: string;
+  registered?: boolean;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  baseUrl = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyD0UOLktJu-uyhmkRzuA91Rsp5ZWMF6DQs';
+
+  baseUrl(type) {
+    return `https://identitytoolkit.googleapis.com/v1/accounts:${type}?key=AIzaSyD0UOLktJu-uyhmkRzuA91Rsp5ZWMF6DQs`;
+  }
 
   constructor(private http: HttpClient) { }
 
   signup(email: string, password: string) {
-    return this.http.post<AuthResponseSata>(this.baseUrl, { email, password, returnSecureToken: true })
+    return this.http.post<AuthResponseSata>(this.baseUrl('signUp'), { email, password, returnSecureToken: true })
       .pipe(
         catchError((errorRes) => {
           let errorMsg = errorRes.error.error.message || 'An unknown error occured!';
@@ -37,5 +41,9 @@ export class AuthService {
           return throwError(errorMsg)
         })
       );
+  }
+
+  login(email: string, password: string) {
+    return this.http.post<AuthResponseSata>(this.baseUrl('signInWithPassword'), { email, password, returnSecureToken: true })
   }
 }
