@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ComponentFactoryResolver } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthService, AuthResponseSata } from './auth.service';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { AuthService, AuthResponseSata } from './auth.service';
+import { AlertComponent } from '../shared/alert/alert.component';
 
 @Component({
   selector: 'app-auth',
@@ -12,7 +13,10 @@ export class AuthComponent implements OnInit {
   isLoginMode = true;
   isLoading = false;
   error = '';
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private componentFactoryResolver: ComponentFactoryResolver) { }
 
   ngOnInit() {
   }
@@ -44,6 +48,7 @@ export class AuthComponent implements OnInit {
       console.log(resData)
     }, errorRes => {
       this.isLoading = false;
+      this.showErrorAlert(errorRes);
       console.log('error', errorRes)
       this.error = errorRes
     });
@@ -53,5 +58,10 @@ export class AuthComponent implements OnInit {
 
   onHandleError() {
     this.error = null;
+  }
+
+  private showErrorAlert(message: string) {
+    // const alertComp = new AlertComponent();
+    const alertCompFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
   }
 }
