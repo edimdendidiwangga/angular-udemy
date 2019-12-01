@@ -1,15 +1,17 @@
-import { Component, OnInit, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, ComponentFactoryResolver, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService, AuthResponseSata } from './auth.service';
 import { AlertComponent } from '../shared/alert/alert.component';
+import { PlaceholderDirective } from '../shared/placeholder/placeholder.direct';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
 })
 export class AuthComponent implements OnInit {
+  @ViewChild(PlaceholderDirective, { static: false }) alertHost: PlaceholderDirective
   isLoginMode = true;
   isLoading = false;
   error = '';
@@ -62,6 +64,12 @@ export class AuthComponent implements OnInit {
 
   private showErrorAlert(message: string) {
     // const alertComp = new AlertComponent();
-    const alertCompFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+    const alertCompFactory = this.componentFactoryResolver.resolveComponentFactory(
+      AlertComponent
+    );
+    const hostViewContainerRef = this.alertHost.viewContainerRef;
+    hostViewContainerRef.clear();
+
+    hostViewContainerRef.createComponent(alertCompFactory);
   }
 }
