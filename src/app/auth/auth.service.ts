@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
-import { throwError, Subject } from 'rxjs';
+import { throwError, BehaviorSubject } from 'rxjs';
 import { User } from './user.model';
 
 export interface AuthResponseSata {
@@ -18,7 +18,7 @@ export interface AuthResponseSata {
   providedIn: 'root'
 })
 export class AuthService {
-  user = new Subject<User>()
+  user = new BehaviorSubject<User>(null);
 
   baseUrl(type) {
     return `https://identitytoolkit.googleapis.com/v1/accounts:${type}?key=AIzaSyD0UOLktJu-uyhmkRzuA91Rsp5ZWMF6DQs`;
