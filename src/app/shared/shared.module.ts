@@ -4,6 +4,7 @@ import { AlertComponent } from './alert/alert.component';
 import { Loading } from './loading.component';
 import { PlaceholderDirective } from './placeholder/placeholder.direct';
 import { DropdownDirective } from './dropdown.directive';
+import { LoggingService } from '../logging.service';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { DropdownDirective } from './dropdown.directive';
     DropdownDirective,
     CommonModule
   ],
+  providers: [LoggingService],
   entryComponents: [
     AlertComponent
   ]
