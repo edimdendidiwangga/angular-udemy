@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { StoreModule } from '@ngrx/store';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,7 +12,8 @@ import { ShoppingListModule } from './shopping-list/shopping-list.module';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core.module';
 import { AuthModule } from './auth/auth.modules';
-import { LoggingService } from './logging.service';
+import { shoppingListReducer } from './shopping-list/store/shopping-list.reducer';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,8 +27,11 @@ import { LoggingService } from './logging.service';
     RecipesModule,
     ShoppingListModule,
     AuthModule,
+    StoreModule.forRoot({
+      shoppingList: shoppingListReducer
+    }),
     SharedModule,
-    CoreModule
+    CoreModule,
   ],
   // providers: [
   //   LoggingService
