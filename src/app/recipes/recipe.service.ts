@@ -11,21 +11,7 @@ import * as fromApp from '../store/app.reducer';
 export class RecipeService {
   recipeChanged = new Subject<Recipe[]>();
 
-  recipes: Recipe[] = [
-    // new Recipe(
-    //   'Test Recipe', 'This is simply a test', 'https://www.justataste.com/wp-content/uploads/2018/01/beef-cornstarch-580x380.jpg',
-    //   [
-    //     new Ingredient('Meat', 1),
-    //     new Ingredient('French Fries', 20),
-    //   ]
-    // ),
-    // new Recipe('Test Recipe2', 'This is simply a test2', '../../../assets/lala.jpg',
-    //   [
-    //     new Ingredient('Buns', 2),
-    //     new Ingredient('Meat', 1),
-    //   ]
-    // )
-  ];
+  recipes: Recipe[] = [];
 
   constructor(
     private store: Store<fromApp.AppState>
@@ -45,7 +31,6 @@ export class RecipeService {
   }
 
   addIngredientToShoppingList(ingredients: Ingredient[]) {
-    // this.slService.addIngredients(ingredients)
     this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients))
   }
 
