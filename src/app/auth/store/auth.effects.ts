@@ -3,7 +3,7 @@ import { Actions, ofType, Effect } from '@ngrx/effects';
 import { switchMap, catchError, map, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import * as AuthActions from './auth.actions';
 import { environment } from '../../../environments/environment';
 
@@ -16,6 +16,36 @@ export interface AuthResponseData {
   localId: string;
   registered?: boolean;
 }
+
+const handleAuthentication = (expiresIn: number, email: string, userId: string, token: string) => {
+  const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+  return new AuthActions.AuthenticateSuccess({
+    email,
+    userId,
+    token,
+    expirationDate
+  })
+}
+const handleError = (errorRes: any) => {
+  let errorMsg = errorRes.error.error.message || 'An unknown error occured!';
+  if (!errorRes.error || !errorRes.error.error) {
+    return of(new AuthActions.AuthenticateFail(errorMsg))
+  }
+  if (/EMAIL_NOT_FOUND/g.test(errorMsg)) {
+    errorMsg = 'This email does not exist.';
+  }
+  if (/INVALID_PASSWORD/g.test(errorMsg)) {
+    errorMsg = 'This Password is noerrort correct.';
+  }
+  if (/EMAIL_EXISTS/g.test(errorMsg)) {
+    errorMsg = 'This email exists already';
+  }
+  if (/WEAK_PASSWORD/g.test(errorMsg)) {
+    errorMsg = 'Password should be at least 6 characters';
+  }
+  return of(new AuthActions.AuthenticateFail(errorMsg))
+} 
+
 @Injectable()
 export class AuthEffects {
   baseUrl(type) {
@@ -24,7 +54,17 @@ export class AuthEffects {
 
   @Effect()
   authSignup = this.actions$.pipe(
-    ofType(AuthActions.SIGNUP_START)
+    ofType(AuthActions.SIGNUP_START),
+    switchMap((signupAction: AuthActions.signupStart) => {
+      return this.http
+        .post<AuthResponseData>(
+          this.baseUrl('signUp'), {
+            email: signupAction.payload.email,
+            password: signupAction.payload.password,
+            returnSecureToken: true
+          }
+        )
+    })
   );
 
   @Effect()
@@ -40,32 +80,15 @@ export class AuthEffects {
         })
         .pipe(
           map(resData => {
-            const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 1000);
-            return new AuthActions.AuthenticateSuccess({
-              email: resData.email,
-              userId: resData.localId,
-              token: resData.idToken,
-              expirationDate
-            })
+            return handleAuthentication(
+              +resData.expiresIn,
+              resData.email,
+              resData.localId,
+              resData.idToken
+            )
           }),
           catchError(errorRes => {
-            let errorMsg = errorRes.error.error.message || 'An unknown error occured!';
-            if (!errorRes.error || !errorRes.error.error) {
-              return of(new AuthActions.AuthenticateFail(errorMsg))
-            }
-            if (/EMAIL_NOT_FOUND/g.test(errorMsg)) {
-              errorMsg = 'This email does not exist.';
-            }
-            if (/INVALID_PASSWORD/g.test(errorMsg)) {
-              errorMsg = 'This Password is noerrort correct.';
-            }
-            if (/EMAIL_EXISTS/g.test(errorMsg)) {
-              errorMsg = 'This email exists already';
-            }
-            if (/WEAK_PASSWORD/g.test(errorMsg)) {
-              errorMsg = 'Password should be at least 6 characters';
-            }
-            return of(new AuthActions.AuthenticateFail(errorMsg))
+            return handleError(errorRes);
           })
         );
     })
