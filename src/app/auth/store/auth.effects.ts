@@ -3,9 +3,10 @@ import { Actions, ofType, Effect } from '@ngrx/effects';
 import { switchMap, catchError, map, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { of, Observable } from 'rxjs';
+import { of } from 'rxjs';
 import * as AuthActions from './auth.actions';
 import { environment } from '../../../environments/environment';
+import { User } from '../user.model';
 
 export interface AuthResponseData {
   kind: string;
@@ -19,6 +20,8 @@ export interface AuthResponseData {
 
 const handleAuthentication = (expiresIn: number, email: string, userId: string, token: string) => {
   const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+  const user = new User(email, userId, token, expirationDate);
+  localStorage.setItem('userData', JSON.stringify(user));
   return new AuthActions.AuthenticateSuccess({
     email,
     userId,
@@ -26,6 +29,7 @@ const handleAuthentication = (expiresIn: number, email: string, userId: string, 
     expirationDate
   })
 }
+
 const handleError = (errorRes: any) => {
   let errorMsg = errorRes.error.error.message || 'An unknown error occured!';
   if (!errorRes.error || !errorRes.error.error) {
@@ -99,6 +103,41 @@ export class AuthEffects {
     ofType(AuthActions.AUTHENTICATE_SUCCESS, AuthActions.LOGOUT),
     tap(() => {
       this.router.navigate(['/']);
+    })
+  )
+
+  @Effect()
+  autoLogin = this.actions$.pipe(
+    ofType(AuthActions.AUTO_LOGIN),
+    map(() => {
+      const userData: {
+        email: string;
+        id: string,
+        _token: string,
+        _tokenExpirationDate: string;
+      } = JSON.parse(localStorage.getItem('userData'));
+      if (!userData) {
+        return { type: 'DUMMY' }
+      }
+      const loadedUser = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExpirationDate));
+      if (loadedUser.token) {
+        return new AuthActions.AuthenticateSuccess({
+          email: userData.email,
+          userId: userData.id,
+          token: userData._token,
+          expirationDate: new Date(userData._tokenExpirationDate)
+        })
+      }
+      return { type: 'DUMMY' };
+    })
+  )
+
+ 
+  @Effect({ dispatch: false })
+  authLogout = this.actions$.pipe(
+    ofType(AuthActions.LOGOUT),
+    tap(() => {
+      localStorage.removeItem('userData')
     })
   )
 
