@@ -41,11 +41,13 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    return this.http.post<AuthResponseSata>(this.baseUrl('signInWithPassword'), { email, password, returnSecureToken: true })
-      .pipe(
-        catchError(this.handleError),
-        tap(resData => this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn))
-      );
+    return this.http
+      .post<AuthResponseSata>(
+        this.baseUrl('signInWithPassword'), { email, password, returnSecureToken: true })
+        .pipe(
+          catchError(this.handleError),
+          tap(resData => this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn))
+        );
   }
 
   autoLogin() {
