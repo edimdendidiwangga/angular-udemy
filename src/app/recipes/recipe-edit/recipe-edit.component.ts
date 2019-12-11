@@ -1,20 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { RecipeService } from '../recipe.service';
-import * as fromApp from '../../store/app.reducer';
 import { map } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import * as fromApp from '../../store/app.reducer';
+import * as RecipeActions from '../store/recipe.actions';
 
 @Component({
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
   styleUrls: ['./recipe-edit.component.css']
 })
-export class RecipeEditComponent implements OnInit {
+export class RecipeEditComponent implements OnInit, OnDestroy {
   id: number;
   editMode = false;
   recipeForm: FormGroup;
+
+  private storeSub: Subscription;
 
   get ingredientsControls() {
     return (this.recipeForm.get('ingredients') as FormArray).controls;
@@ -23,7 +26,6 @@ export class RecipeEditComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private recipeService: RecipeService,
     private store: Store<fromApp.AppState>
   ) { }
 
@@ -42,7 +44,7 @@ export class RecipeEditComponent implements OnInit {
     let recipeIngredients = new FormArray([]);
 
     if (this.editMode) {
-      this.store.select('recipes')
+      this.storeSub = this.store.select('recipes')
         .pipe(
           map(recipeState => recipeState.recipes.find((recipe, index) => index === this.id))
         )
@@ -74,6 +76,12 @@ export class RecipeEditComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    if (this.storeSub) {
+      this.storeSub.unsubscribe();
+    }
+  }
+
   onSubmit() {
     console.log(this.recipeForm)
     const { value } = this.recipeForm;
@@ -84,9 +92,12 @@ export class RecipeEditComponent implements OnInit {
     //   value['ingredients'],
     // )
     if (this.editMode) {
-      this.recipeService.updateRecipe(this.id, value);
+      this.store.dispatch(new RecipeActions.UpdateRecipes({
+        index: this.id,
+        newRecipe: value
+      }));
     } else {
-      this.recipeService.addRecipe(value);
+      this.store.dispatch(new RecipeActions.AddRecipes(value));
     }
     this.onCancel();
   }

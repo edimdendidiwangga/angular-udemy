@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, ofType } from '@ngrx/effects';
-import { take } from 'rxjs/operators';
+import { take, map, switchMap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Recipe } from './recipes.model';
 import * as fromApp from '../store/app.reducer';
@@ -18,11 +19,20 @@ export class RecipesResolverService implements Resolve<Recipe[]>{
   ) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    // return this.dataStorageService.fetchRecipes();
-    this.store.dispatch(new RecipesActions.FetchRecipes());
-    return this.actions$.pipe(
-      ofType(RecipesActions.SET_RECIPES),
-      take(1)
-    );
+    return this.store.select('recipes').pipe(
+      take(1),
+      map(recipesState => recipesState.recipes),
+      switchMap(recipes => {
+        if (recipes.length) {
+          return of(recipes);
+        } else {
+          this.store.dispatch(new RecipesActions.FetchRecipes());
+          return this.actions$.pipe(
+            ofType(RecipesActions.SET_RECIPES),
+            take(1)
+          );
+        }
+      })
+    )
   }
 }
