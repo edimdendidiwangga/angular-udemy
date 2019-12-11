@@ -19,7 +19,7 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
-const handleAuthentication = (expiresIn: number, email: string, userId: string, token: string) => {
+const handleAuthentication = (expiresIn: number, email: string, userId: string, token: string, isRedirect) => {
   const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
   const user = new User(email, userId, token, expirationDate);
   localStorage.setItem('userData', JSON.stringify(user));
@@ -27,7 +27,8 @@ const handleAuthentication = (expiresIn: number, email: string, userId: string, 
     email,
     userId,
     token,
-    expirationDate
+    expirationDate,
+    isRedirect
   })
 }
 
@@ -92,7 +93,8 @@ export class AuthEffects {
               +resData.expiresIn,
               resData.email,
               resData.localId,
-              resData.idToken
+              resData.idToken,
+              true
             )
           }),
           catchError(errorRes => {
@@ -105,8 +107,10 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   authRedirect = this.actions$.pipe(
     ofType(AuthActions.AUTHENTICATE_SUCCESS),
-    tap(() => {
-      this.router.navigate(['/']);
+    tap((authSuccessAction: AuthActions.AuthenticateSuccess) => {
+      if (authSuccessAction.payload.isRedirect) {
+        this.router.navigate(['/']);
+      }
     })
   )
 
@@ -131,7 +135,8 @@ export class AuthEffects {
           email: userData.email,
           userId: userData.id,
           token: userData._token,
-          expirationDate: new Date(userData._tokenExpirationDate)
+          expirationDate: new Date(userData._tokenExpirationDate),
+          isRedirect: false,
         })
       }
       return { type: 'DUMMY' };
