@@ -11,14 +11,14 @@ import { trigger, state, style } from '@angular/animations';
         transform: 'translateX(0)'
       })),
       state('highlighted', style({
-        backgroundColor: 'blue',
+        'background-color': 'blue',
         transform: 'translateX(100px)'
       }))
     ])
   ]
 })
 export class AppComponent {
-  state = 'normal';
+  state = 'highlighted';
   list = ['Milk', 'Sugar', 'Bread'];
 
   onAdd(item) {
@@ -27,5 +27,13 @@ export class AppComponent {
 
   onDelete(item) {
     this.list.splice(this.list.indexOf(item), 1);
+  }
+
+  onAnimate() {
+    this.state === 'normal' ? this.state = 'highlighted' : this.state = 'normal';
+  }
+
+  onShrink() {
+
   }
 }
