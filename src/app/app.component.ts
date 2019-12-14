@@ -94,7 +94,7 @@ import { trigger, state, style, transition, animate, keyframes, group } from '@a
           animate(300, style({
             color: 'red'
           })),
-          animate(300, style({
+          animate(800, style({
             transform: 'translateX(100px)',
             opacity: 0
           }))
